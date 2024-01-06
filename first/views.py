@@ -4,4 +4,7 @@ from django.http import HttpResponse
 # Create your views here.
 
 def home(request):
-    return HttpResponse("<h1>I made changes localy !</h1>")
+    return render(request, 'first/base.html')
+
+def page(request):
+    return render(request, 'first/random.html')

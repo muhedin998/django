@@ -1,0 +1,63 @@
+{% extends './index.html' %}
+
+{% block content %}
+<div class="container w-100">
+    <select class="form-select" id="sel" aria-label="Default select example">
+        <option selected>List of all LoL champions</option>
+      </select>
+      <br>
+      <h6>Champikon information:</h6>
+      <br>
+      <div class="container">
+        <table class="table table-success table-striped" id="tab">
+            <tr>
+                <th>States</th>
+                <th>Values</th>
+            </tr>
+          </table>
+      </div>
+</div>
+<script>
+    const URL = 'https://ddragon.leagueoflegends.com/cdn/6.24.1/data/en_US/champion.json';
+    const sel = document.getElementById('sel');
+    const tab = document.getElementById('tab');
+    let data;
+
+    async function logMovies() {
+      const response = await fetch(URL);
+      const movies = await response.json();
+      console.log(movies.data);
+      data = movies.data;
+      Object.keys(movies.data).forEach(champ => {
+        let node = document.createElement('option');
+        node.setAttribute('value', champ)
+        node.textContent = champ
+        sel.appendChild(node)
+      })
+    }
+    logMovies();
+
+    sel.addEventListener('change', (event) =>{
+        let value = event.target.value
+        let tempStats  = data[value];
+        Object.keys(data[value]).forEach(stat =>{
+            let tr  = document.createElement('tr')
+            let td1 = document.createElement('td')
+            let td2 = document.createElement('td')
+            td1.textContent = stat;
+            td2.textContent = JSON.stringify(tempStats[stat]);
+
+            td1.setAttribute("class", "table-active")
+            
+            td2.setAttribute("class", "table-active")
+
+            tr.appendChild(td1)
+            tr.appendChild(td2);
+            tab.append(tr)
+            tab.append(document.createElement('br'))
+        })
+        console.log(data[value].stats)
+        console.log(value)
+    })
+  </script>
+{% endblock %}
